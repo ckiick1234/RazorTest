@@ -1,0 +1,46 @@
+﻿@page
+@using RazorTest.Models
+@model RazorTest.Pages.PeopleModel
+@{
+    <h1>People</h1>
+
+    <form method="post">
+       
+        
+        <label for="id">Id:</label>
+        <input type="number" id="id" name="id" />
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" />
+
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" />
+
+        <button type="submit">Add Person</button>
+   
+
+    </form>
+
+    <table class="table">
+    <thead>
+    <tr> 
+        <th>Id</th>
+        <th>Name</th>
+        <th>Age</th>
+    </tr>
+    </thead>
+
+    <tbody>
+        @foreach (Person person in Model.People)
+        {
+            <tr>
+                <td>@person.Id</td>
+                <td>@person.Name</td>
+                <td>@person.Age</td>
+            </tr>
+        }
+    </tbody>
+    
+    </table>
+}
+
