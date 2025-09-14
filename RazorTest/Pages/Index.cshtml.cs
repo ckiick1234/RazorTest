@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using RazorTest.Data;
+using RazorTest.Models;
 
 namespace RazorTest.Pages
 {
@@ -7,9 +10,12 @@ namespace RazorTest.Pages
     {
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        private readonly ProductContext _context;
+
+        public IndexModel(ILogger<IndexModel> logger, ProductContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public void OnGet()

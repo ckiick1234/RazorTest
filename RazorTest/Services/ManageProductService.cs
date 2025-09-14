@@ -1,23 +1,24 @@
-﻿using RazorTest.Models;
+﻿using Azure;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Azure.Cosmos;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using RazorTest.Data;
+using RazorTest.Models;
+using System.Net;
 
 namespace RazorTest.Services
 {
     public class ManageProductService
     {
         private readonly ProductContext _context = default!;
-        public ManageProductService(ProductContext context)
+        private readonly IConfiguration _configuration;
+
+        public ManageProductService(ProductContext context, IConfiguration configuration)
         {
             _context = context;
-        }
-
-        public IList<Product> GetAllProducts()
-        {
-            if (_context.Products == null)
-            {
-                return new List<Product>();
-            }
-            return _context.Products!.ToList();
+            _configuration = configuration;
         }
 
         public void AddProduct(Product product)
@@ -51,6 +52,39 @@ namespace RazorTest.Services
             {
                 _context.Products.Remove(product);
                 _context.SaveChanges();
+            }
+        }
+
+        public async Task<List<dynamic>> GetAllProducts()
+        {
+            List<dynamic> items = new List<dynamic>();
+
+            try
+            {
+                CosmosClient cosmosClient = new CosmosClient(_configuration["CosmosDbConnectionString"]);
+                var _container = cosmosClient.GetContainer("twincity", "products");
+
+                // Create a query to select all items
+                QueryDefinition queryDefinition = new QueryDefinition("SELECT * FROM c");
+
+                // Get the FeedIterator for the query
+                using FeedIterator<dynamic> feedIterator = _container.GetItemQueryIterator<dynamic>(queryDefinition);
+
+                // Iterate through the results, page by page
+                while (feedIterator.HasMoreResults)
+                {
+                    FeedResponse<dynamic> response = await feedIterator.ReadNextAsync();
+                    foreach (dynamic item in response)
+                    {
+                        items.Add(item);
+                    }
+                }
+
+                return items;
+            }
+            catch (CosmosException e)
+            {
+                return items;
             }
         }
 

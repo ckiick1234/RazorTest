@@ -1,24 +1,35 @@
 using RazorTest.Models;
 using Microsoft.Azure.Cosmos;
+using RazorTest.Services;
+using RazorTest.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Cosmos;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+builder.Configuration.AddUserSecrets<Program>();
 
 builder.Services.AddDbContext<MyDbContext>();
 
-builder.Services.AddSingleton<CosmosClient>(ServiceProvider =>
-{
-    var configuration = ServiceProvider.GetRequiredService<IConfiguration>();
-    string accountEndpoint = configuration["CosmosDb:AccountEndpoint"] ?? throw new InvalidOperationException("Cosmos DB account endpoint is not configured.");
-    string accountKey = configuration["CosmosDb:AccountKey"] ?? throw new InvalidOperationException("Cosmos DB account key is not configured.");
-    CosmosClientOptions options = new CosmosClientOptions
-    {
-        ApplicationName = "RazorTestApp"
-    };
-    return new CosmosClient(accountEndpoint, accountKey, options);
-});
+var cosmosConnectionString = builder.Configuration["CosmosDbConnectionString"];
+var cosmosDatabaseName = builder.Configuration["CosmosDbContainerName"];
+
+if (string.IsNullOrEmpty(cosmosConnectionString))
+    throw new InvalidOperationException("Cosmos DB connection string is not configured.");
+if (string.IsNullOrEmpty(cosmosDatabaseName))
+    throw new InvalidOperationException("Cosmos DB database name is not configured.");
+
+builder.Services.AddDbContext<ProductContext>(options =>
+    options.UseCosmos(
+        cosmosConnectionString,
+        cosmosDatabaseName
+    )
+);
+
+builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<ManageProductService>();
 
 var app = builder.Build();
 

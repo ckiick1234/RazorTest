@@ -6,30 +6,60 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 
+<style>
+    .table-forst {
+        background-color: #228B22 !important; /* Forest green */
+        color: #fff !important;
+    }
+    .table-lime {
+        background-color: #32CD32 !important; /* Lime green */
+        color: #fff !important;
+    }
+    .table-blue {
+        background-color: #007bff !important; /* Bootstrap blue */
+        color: #fff !important;
+    }
+    .row-forst td {
+        background-color: #228B22 !important;
+        color: #fff !important;
+    }
+    .row-lime td {
+        background-color: #32CD32 !important;
+        color: #fff !important;
+    }
+    .row-blue td {
+        background-color: #007bff !important;
+        color: #fff !important;
+    }
+</style>
+
 <div class="container mt-4">
-    <h2>Product List</h2>
+    <h2 class="text-blue">Product List</h2>
     <table class="table table-striped table-bordered align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th scope="col">Product Image</th>
+        <thead>
+            <tr class="table-forst">
+                @* <th scope="col">Product Image</th> *@
                 <th scope="col">Product Name</th>
                 <th scope="col">Product Price</th>
                 <th scope="col">Product Quantity</th>
             </tr>
         </thead>
         <tbody>
-            @* @if (Model.Products != null && Model.Products.Any())
+            @if (Model.Products != null && Model.Products.Any())
             {
+                var colorClasses = new[] { "row-forst", "row-lime", "row-blue" };
+                var i = 0;
                 foreach (var product in Model.Products)
                 {
-                    <tr>
-                        <td>
+                    <tr class="@colorClasses[i % colorClasses.Length]">
+                        @* <td>
                             <img src="@product.ImageUrl" alt="@product.Name" style="max-width: 80px; max-height: 80px;" class="img-thumbnail" />
-                        </td>
+                        </td> *@
                         <td>@product.Name</td>
                         <td>@product.Price.ToString("C")</td>
                         <td>@product.Quantity</td>
                     </tr>
+                    i++;
                 }
             }
             else
@@ -37,7 +67,7 @@
                 <tr>
                     <td colspan="4" class="text-center">No products available.</td>
                 </tr>
-            } *@
+            }
         </tbody>
     </table>
 </div>
