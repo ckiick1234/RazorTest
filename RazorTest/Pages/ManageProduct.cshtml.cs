@@ -42,6 +42,13 @@ namespace RazorTest.Pages
             initialize();
         }
 
+        public async Task OnPostDeleteAsync(string id)
+        {
+            var result = _manageProductService.DeleteProduct(id);
+            result.Wait();
+            initialize();
+        }
+
         public void initialize()
         {
             var result = _manageProductService.GetAllProducts();

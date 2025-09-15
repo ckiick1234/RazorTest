@@ -10,15 +10,15 @@
 
 <style>
     .table-forst {
-        background-color: #228B22 !important; /* Forest green */
+        background-color: #228B22 !important;
         color: #fff !important;
     }
     .table-lime {
-        background-color: #32CD32 !important; /* Lime green */
+        background-color: #32CD32 !important;
         color: #fff !important;
     }
     .table-blue {
-        background-color: #007bff !important; /* Bootstrap blue */
+        background-color: #007bff !important;
         color: #fff !important;
     }
     .row-forst td {
@@ -44,6 +44,7 @@
                 <th scope="col">Product Name</th>
                 <th scope="col">Product Price</th>
                 <th scope="col">Product Quantity</th>
+                <th scope="col">Remove Product</th>
             </tr>
         </thead>
         <tbody>
@@ -60,6 +61,11 @@
                         <td>@product.name</td>
                         <td>@product.price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
                         <td>@product.quantity</td>
+                        <td>
+                            <form method="post" asp-page-handler="Delete" asp-route-id="@product.id" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to remove this product?');">Remove</button>
+                            </form>
+                        </td>
                     </tr>
                     i++;
                 }
@@ -67,7 +73,7 @@
             else
             {
                 <tr>
-                    <td colspan="4" class="text-center">No products available.</td>
+                    <td colspan="5" class="text-center">No products available.</td>
                 </tr>
             }
         </tbody>
@@ -75,8 +81,6 @@
 
     <button class="btn btn-success mt-3" id="addProductBtn" type="button" onclick="showAddProductForm()">Add Product</button>
     
-    @* GET THIS FORM TO WORK *@
-
     <div id="addProductForm" class="mt-4" style="display:none;">
         <div class="card">
             <div class="card-header table-forst">

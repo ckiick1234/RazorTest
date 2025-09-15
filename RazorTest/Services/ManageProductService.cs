@@ -57,17 +57,21 @@ namespace RazorTest.Services
             _context.SaveChanges();
         }
 
-        public void DeleteProduct(int productId)
+        public async Task DeleteProduct(string productId)
         {
-            if (_context.Products == null)
+            try
             {
-                throw new InvalidOperationException("Product context is not initialized.");
+                CosmosClient cosmosClient = new CosmosClient(_configuration["CosmosDbConnectionString"]);
+                var _container = cosmosClient.GetContainer(_configuration["CosmosDbName"], _configuration["CosmosDbContainerName"]);
+
+                // Fix: Specify type argument for DeleteItemAsync
+                await _container.DeleteItemAsync<Product>(productId, new PartitionKey(productId));
+
+                return;
             }
-            var product = _context.Products.Find(productId);
-            if (product != null)
+            catch (CosmosException e)
             {
-                _context.Products.Remove(product);
-                _context.SaveChanges();
+                return;
             }
         }
 
