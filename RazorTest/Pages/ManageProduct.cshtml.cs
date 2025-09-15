@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using RazorTest.Models;
 using RazorTest.Services;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace RazorTest.Pages
@@ -29,11 +30,6 @@ namespace RazorTest.Pages
 
         public async Task OnPostAsync()
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return;
-            //}
-
             Product product = new Product {
                 id = new Random().Next().ToString(),//Guid.NewGuid().ToString(),
                 name = FormData.name,
