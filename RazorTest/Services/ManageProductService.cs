@@ -21,14 +21,30 @@ namespace RazorTest.Services
             _configuration = configuration;
         }
 
-        public void AddProduct(Product product)
+        public async Task AddProduct(Product product)
         {
-            if (_context.Products == null)
+            //if (_context.Products == null)
+            //{
+            //    throw new InvalidOperationException("Product context is not initialized.");
+            //}
+            //_context.Products.Add(product);
+            //_context.SaveChanges();
+
+            //List<dynamic> items = new List<dynamic>();
+
+            try
             {
-                throw new InvalidOperationException("Product context is not initialized.");
+                CosmosClient cosmosClient = new CosmosClient(_configuration["CosmosDbConnectionString"]);
+                var _container = cosmosClient.GetContainer("twincity", "products");
+
+                await _container.CreateItemAsync(product, new PartitionKey(product.id));
+
+                return;
             }
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            catch (CosmosException e)
+            {
+                return;
+            }
         }
 
         public void UpdateProduct(Product product)

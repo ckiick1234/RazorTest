@@ -57,9 +57,9 @@
                         @* <td>
                             <img src="@product.ImageUrl" alt="@product.Name" style="max-width: 80px; max-height: 80px;" class="img-thumbnail" />
                         </td> *@
-                        <td>@product.Name</td>
-                        <td>@product.Price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
-                        <td>@product.Quantity</td>
+                        <td>@product.name</td>
+                        <td>@product.price.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-US"))</td>
+                        <td>@product.quantity</td>
                     </tr>
                     i++;
                 }
@@ -74,6 +74,8 @@
     </table>
 
     <button class="btn btn-success mt-3" id="addProductBtn" type="button" onclick="showAddProductForm()">Add Product</button>
+    
+    @* GET THIS FORM TO WORK *@
 
     <div id="addProductForm" class="mt-4" style="display:none;">
         <div class="card">
@@ -98,7 +100,7 @@
                         <label for="Quantity" class="form-label">Quantity</label>
                         <input type="number" class="form-control" id="Quantity" name="Quantity" min="0" required />
                     </div>
-                    <button type="submit" class="btn btn-primary" formaction="?handler=AddProduct">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                     <button type="button" class="btn btn-secondary ms-2" onclick="hideAddProductForm()">Cancel</button>
                 </form>
             </div>

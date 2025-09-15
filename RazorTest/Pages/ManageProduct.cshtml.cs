@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json.Linq;
 using RazorTest.Models;
-using RazorTest.Services;   
+using RazorTest.Services;
+using System.Threading.Tasks;
+
 
 namespace RazorTest.Pages
 {
@@ -10,6 +13,9 @@ namespace RazorTest.Pages
         private readonly ManageProductService _manageProductService;
 
         public List<Product> Products = new List<Product>();
+
+        [BindProperty]
+        public Product FormData { get; set; }
 
         public ManageProductModel(ManageProductService manageProductService)
         {
@@ -21,18 +27,38 @@ namespace RazorTest.Pages
             initialize();
         }
 
+        public async Task OnPostAsync()
+        {
+            //if (!ModelState.IsValid)
+            //{
+            //    return;
+            //}
+
+            Product product = new Product {
+                id = new Random().Next().ToString(),//Guid.NewGuid().ToString(),
+                name = FormData.name,
+                price = FormData.price,
+                quantity = FormData.quantity };
+            
+
+            var result = _manageProductService.AddProduct(product);
+            result.Wait();
+            initialize();
+        }
+
         public void initialize()
         {
             var result = _manageProductService.GetAllProducts();
             result.Wait();
-            Console.WriteLine("GetAllProducts called " + result.Result.ToString());
             Products = result.Result.ConvertAll(item => new Product
             {
-                Id = item.id,
-                Name = item.name,
-                Price = item.price,
-                Quantity = item.quantity
+                id = item.id,
+                name = item.name,
+                price = item.price,
+                quantity = item.quantity
             });
         }
+
+
     }
 }
