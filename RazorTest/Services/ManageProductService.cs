@@ -35,7 +35,7 @@ namespace RazorTest.Services
             try
             {
                 CosmosClient cosmosClient = new CosmosClient(_configuration["CosmosDbConnectionString"]);
-                var _container = cosmosClient.GetContainer("twincity", "products");
+                var _container = cosmosClient.GetContainer(_configuration["CosmosDbName"], _configuration["CosmosDbContainerName"]);
 
                 await _container.CreateItemAsync(product, new PartitionKey(product.id));
 
@@ -78,7 +78,7 @@ namespace RazorTest.Services
             try
             {
                 CosmosClient cosmosClient = new CosmosClient(_configuration["CosmosDbConnectionString"]);
-                var _container = cosmosClient.GetContainer("twincity", "products");
+                var _container = cosmosClient.GetContainer(_configuration["CosmosDbName"], _configuration["CosmosDbContainerName"]);
 
                 // Create a query to select all items
                 QueryDefinition queryDefinition = new QueryDefinition("SELECT * FROM c");
