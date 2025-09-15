@@ -2,6 +2,8 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
