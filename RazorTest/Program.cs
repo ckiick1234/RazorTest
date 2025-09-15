@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-if (!builder.Environment.IsProduction())
+if (builder.Environment.IsProduction())
 {
     var keyVaultURL = builder.Configuration.GetSection("KeyVault:KeyVaultURL");
     var keyVaultClientId = builder.Configuration.GetSection("KeyVault:ClientId");
